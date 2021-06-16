@@ -1,0 +1,23 @@
+apiVersion: "v2"
+name: "Scenario-Device"
+manufacturer: "RDDigital"
+model: "SD-01"
+labels:
+  - "Scenario"
+
+deviceResources:
+  -
+    name: "TriggerScenario"
+    isHidden: false
+    properties:
+        valueType: "Bool"
+        readWrite: "W"
+        defaultValue: "true"
+
+deviceCommands:
+  -
+    name: "Trigger"
+    isHidden: false
+    readWrite: "W"
+    resourceOperations:
+      - { deviceResource: "TriggerScenario", defaultValue: "true" }
