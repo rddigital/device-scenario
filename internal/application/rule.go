@@ -2,7 +2,7 @@ package application
 
 import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
-	"github.com/rddigital/device-scenario/models"
+	"github.com/rddigital/device-scenario/internal/models"
 )
 
 func AddRule(rule models.Rule) errors.EdgeX {

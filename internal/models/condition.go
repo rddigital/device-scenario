@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strconv"
 
-	"github.com/rddigital/device-scenario/common"
+	"github.com/rddigital/device-scenario/internal/common"
 )
 
 type Condition struct {

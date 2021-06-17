@@ -9,9 +9,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 	"github.com/gorilla/mux"
 
-	"github.com/rddigital/device-scenario/application"
-	"github.com/rddigital/device-scenario/common"
-	"github.com/rddigital/device-scenario/models"
+	"github.com/rddigital/device-scenario/internal/application"
+	"github.com/rddigital/device-scenario/internal/common"
+	"github.com/rddigital/device-scenario/internal/models"
 )
 
 func AddRuleHander(w http.ResponseWriter, r *http.Request) {

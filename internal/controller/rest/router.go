@@ -9,7 +9,7 @@ import (
 	commonDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/errors"
 
-	"github.com/rddigital/device-scenario/common"
+	"github.com/rddigital/device-scenario/internal/common"
 )
 
 func InitRuleServer() {

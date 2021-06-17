@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
-	"github.com/rddigital/device-scenario/common"
+	"github.com/rddigital/device-scenario/internal/common"
 )
 
 type Rule struct {
@@ -37,14 +37,16 @@ func RuleToProperties(rule Rule) map[string]models.ProtocolProperties {
 	return protocol
 }
 
-func RuleFromDevice(d models.Device) (rule Rule) {
+func RuleFromDevice(d models.Device) (rule Rule, ok bool) {
 	rule.Id = d.Id
 	rule.Name = d.Name
 	rule.Description = d.Description
 	rule.AdminState = d.AdminState
 
-	if pp, ok := d.Protocols[common.ActionsProperty]; ok {
-		rule.Actions = ActionsFromProperties(pp)
+	if pp, ok := d.Protocols[common.ConditionsProperty]; ok {
+		rule.Conditions = ConditionsFromProperties(pp)
+	} else {
+		return Rule{}, false
 	}
 
 	if pp, ok := d.Protocols[common.NotifyEnableProperty]; ok {
@@ -52,9 +54,14 @@ func RuleFromDevice(d models.Device) (rule Rule) {
 		rule.NotifyEnable, _ = strconv.ParseBool(strBool)
 	}
 
-	if pp, ok := d.Protocols[common.ConditionsProperty]; ok {
-		rule.Conditions = ConditionsFromProperties(pp)
+	if pp, ok := d.Protocols[common.ActionsProperty]; ok {
+		rule.Actions = ActionsFromProperties(pp)
+	} else {
+		// Require (Actions != nil) or (Actions = nil and NotifyEnable = true)
+		if !rule.NotifyEnable {
+			return Rule{}, false
+		}
 	}
 
-	return
+	return rule, false
 }

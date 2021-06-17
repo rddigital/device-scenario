@@ -22,7 +22,7 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
-	"github.com/rddigital/device-scenario/config"
+	"github.com/rddigital/device-scenario/internal/config"
 )
 
 var once sync.Once
