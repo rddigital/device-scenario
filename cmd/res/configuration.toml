@@ -10,8 +10,8 @@ LogLevel = 'DEBUG'
 
 [Service]
 HealthCheckInterval = '10s'
-Host = '172.17.0.1'
-Port = 59980
+Host = 'localhost'
+Port = 59990
 ServerBindAddr = ''  # blank value defaults to Service.Host value
 StartupMsg = 'device scenario started'
 # MaxRequestSize limit the request body size in byte of put command
@@ -54,10 +54,7 @@ PublishTopicPrefix = 'edgex/events/device' # /<device-profile-name>/<device-name
   ConnectTimeout = "5" # Seconds
   SkipCertVerify = "false" # Only used if Cert/Key file or Cert/Key PEMblock are specified  [MessageQueue.Optional]
 
-# Example SecretStore configuration.
 # Only used when EDGEX_SECURITY_SECRET_STORE=true
-# Must also add `ADD_SECRETSTORE_TOKENS: "device-simple"` to vault-worker environment so it generates
-# the token and secret store in vault for 'device-simple'
 [SecretStore]
 Type = 'vault'
 Host = 'localhost'
@@ -84,7 +81,23 @@ UseMessageBus = false
 
 # The structured custom configuration
 [ServiceCustomConfig]
+  [ServiceCustomConfig.MyserviceInfo]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 59990
   [ServiceCustomConfig.CommandClientInfo]
   Protocol = 'http'
   Host = 'localhost'
   Port = 59882
+  [ServiceCustomConfig.NotificationClientInfo]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 59860
+  [ServiceCustomConfig.SchedulerClientInfo]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 59861
+  [ServiceCustomConfig.RuleEngineClientInfo]
+  Protocol = 'http'
+  Host = 'localhost'
+  Port = 9081

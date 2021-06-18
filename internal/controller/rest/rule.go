@@ -3,6 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	contractsCommon "github.com/edgexfoundry/go-mod-core-contracts/v2/common"
 	commonDTO "github.com/edgexfoundry/go-mod-core-contracts/v2/dtos/common"
@@ -19,7 +20,7 @@ func AddRuleHander(w http.ResponseWriter, r *http.Request) {
 		defer func() { _ = r.Body.Close() }()
 	}
 
-	var addRuleRequest models.Rule
+	var addRuleRequest models.RuleRequest
 	err := json.NewDecoder(r.Body).Decode(&addRuleRequest)
 	if err != nil {
 		edgexErr := errors.NewCommonEdgeX(errors.KindServerError, "failed to decode JSON", err)
@@ -34,7 +35,25 @@ func AddRuleHander(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	edgexErr := application.AddRule(addRuleRequest)
+	if addRuleRequest.Rule.Name == "" {
+		edgexErr := errors.NewCommonEdgeX(errors.KindServerError, "rule name empty", err)
+		SendEdgexError(w, r, edgexErr)
+		return
+	}
+
+	if enable, _ := strconv.ParseBool(addRuleRequest.Rule.NotifyEnable); (len(addRuleRequest.Rule.Actions) == 0) && (!enable) {
+		edgexErr := errors.NewCommonEdgeX(errors.KindServerError, "no action rule", err)
+		SendEdgexError(w, r, edgexErr)
+		return
+	}
+
+	if len(addRuleRequest.Rule.Conditions) == 0 {
+		edgexErr := errors.NewCommonEdgeX(errors.KindServerError, "rule condions empty", err)
+		SendEdgexError(w, r, edgexErr)
+		return
+	}
+
+	edgexErr := application.AddRule(addRuleRequest.Rule)
 	if edgexErr == nil {
 		correlationID := r.Header.Get(contractsCommon.CorrelationHeader)
 		response := commonDTO.NewBaseResponse(correlationID, "", http.StatusOK)
@@ -45,14 +64,10 @@ func AddRuleHander(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllRuleHander(w http.ResponseWriter, r *http.Request) {
-	rulesResponse, edgexErr := application.GetAllRule()
-	if edgexErr == nil {
-		correlationID := r.Header.Get(contractsCommon.CorrelationHeader)
-		response := models.NewMultiRulesResponse(correlationID, "", http.StatusOK, rulesResponse)
-		SendResponse(w, r, response, http.StatusOK)
-	} else {
-		SendEdgexError(w, r, edgexErr)
-	}
+	rulesResponse := application.GetAllRule()
+	correlationID := r.Header.Get(contractsCommon.CorrelationHeader)
+	response := models.NewMultiRulesResponse(correlationID, "", http.StatusOK, rulesResponse)
+	SendResponse(w, r, response, http.StatusOK)
 }
 
 func GetRuleByNameHander(w http.ResponseWriter, r *http.Request) {
@@ -79,7 +94,7 @@ func UpdateRuleByNameHander(w http.ResponseWriter, r *http.Request) {
 		defer func() { _ = r.Body.Close() }()
 	}
 
-	var updateRuleRequest models.Rule
+	var updateRuleRequest models.RuleRequest
 	err := json.NewDecoder(r.Body).Decode(&updateRuleRequest)
 	if err != nil {
 		edgexErr := errors.NewCommonEdgeX(errors.KindServerError, "failed to decode JSON", err)
@@ -87,7 +102,14 @@ func UpdateRuleByNameHander(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	edgexErr := application.UpdateRuleByName(name, updateRuleRequest)
+	err = common.Validate(updateRuleRequest)
+	if err != nil {
+		edgexErr := errors.NewCommonEdgeX(errors.KindServerError, "failed to validation", err)
+		SendEdgexError(w, r, edgexErr)
+		return
+	}
+
+	edgexErr := application.UpdateRuleByName(name, updateRuleRequest.Rule)
 	if edgexErr == nil {
 		correlationID := r.Header.Get(contractsCommon.CorrelationHeader)
 		response := commonDTO.NewBaseResponse(correlationID, "", http.StatusOK)

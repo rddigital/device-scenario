@@ -1,6 +1,6 @@
 package models
 
 type ContentTrigger struct {
-	TriggerIndex string `json:"triggerIndex" validate:"required"`
-	TriggerState string `json:"triggerState" validate:"required"`
+	TriggerIndex *int  `json:"triggerIndex" validate:"required"`
+	TriggerState *bool `json:"triggerState" validate:"required"`
 }

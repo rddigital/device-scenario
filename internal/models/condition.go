@@ -30,10 +30,6 @@ func ConditionsToProperties(conditions []Condition) map[string]string {
 		if err != nil {
 			continue
 		}
-		if common.Validate(value) != nil {
-			continue
-		}
-
 		key := strconv.Itoa(index)
 		properties[key] = string(value)
 	}

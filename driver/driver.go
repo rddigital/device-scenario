@@ -1,6 +1,5 @@
-// -*- Mode: Go; indent-tabs-mode: t -*-
 //
-// Copyright (C) 2018-2021 IOTech Ltd
+// Copyright (C) 2011-2021 Phan Van Hai
 //
 // SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +21,9 @@ import (
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/clients/logger"
 	"github.com/edgexfoundry/go-mod-core-contracts/v2/models"
 
+	"github.com/rddigital/device-scenario/internal/application"
 	"github.com/rddigital/device-scenario/internal/config"
+	"github.com/rddigital/device-scenario/internal/controller/rest"
 )
 
 var once sync.Once
@@ -66,10 +67,20 @@ func (d *ScenarioDriver) Initialize(lc logger.LoggingClient, asyncCh chan<- *dsM
 		return fmt.Errorf("'%s' custom configuration validation failed: %s", ServiceCustomConfigName, err.Error())
 	}
 
+	hostService := d.serviceConfig.ServiceCustomConfig.MyserviceInfo.Host
+	portService := d.serviceConfig.ServiceCustomConfig.MyserviceInfo.Port
 	urlCoreCommand := d.serviceConfig.ServiceCustomConfig.CommandClientInfo.Url()
 	d.commandClient = http.NewCommandClient(urlCoreCommand)
+	urlNotification := d.serviceConfig.ServiceCustomConfig.NotificationClientInfo.Url()
+	urlSchduler := d.serviceConfig.ServiceCustomConfig.SchedulerClientInfo.Url()
+	urlRuleEngine := d.serviceConfig.ServiceCustomConfig.RuleEngineClientInfo.Url()
 
-	return nil
+	rest.InitRuleServer()
+	err := application.InitRuleApplication(d.lc, portService, hostService, urlCoreCommand, urlNotification, urlSchduler, urlRuleEngine)
+	if err != nil {
+		d.lc.Errorf(err.Error())
+	}
+	return err
 }
 
 func (d *ScenarioDriver) HandleReadCommands(deviceName string, protocols map[string]models.ProtocolProperties, reqs []dsModels.CommandRequest) (res []*dsModels.CommandValue, err error) {

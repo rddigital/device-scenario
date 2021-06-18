@@ -15,9 +15,10 @@ import (
 func InitRuleServer() {
 	ds := service.RunningService()
 	ds.AddRoute(common.ApiRuleRoute, AddRuleHander, http.MethodPost)
-	ds.AddRoute(common.ApiRuleRoute, GetAllRuleHander, http.MethodGet)
+	ds.AddRoute(common.ApiAllRuleRoute, GetAllRuleHander, http.MethodGet)
 	ds.AddRoute(common.ApiRuleByNameRoute, GetRuleByNameHander, http.MethodGet)
 	ds.AddRoute(common.ApiRuleByNameRoute, UpdateRuleByNameHander, http.MethodPut)
+	ds.AddRoute(common.ApiRuleByNameRoute, DeleteRuleByNameHander, http.MethodDelete)
 	ds.AddRoute(common.ApiRuleTriggerByIdRoute, TriggerRuleByIdHander, http.MethodPost)
 }
 
