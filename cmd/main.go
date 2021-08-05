@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	serviceName string = "device-scenario"
+	serviceName string = "scenario"
 )
 
 func main() {

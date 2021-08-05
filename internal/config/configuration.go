@@ -41,7 +41,11 @@ type ServiceConfig struct {
 }
 
 type ServiceCustomConfig struct {
-	CommandClientInfo ClientInfo
+	MyserviceInfo          ClientInfo
+	CommandClientInfo      ClientInfo
+	NotificationClientInfo ClientInfo
+	SchedulerClientInfo    ClientInfo
+	RuleEngineClientInfo   ClientInfo
 }
 
 // UpdateFromRaw updates the service's full configuration from raw data received from
@@ -60,11 +64,40 @@ func (sw *ServiceConfig) UpdateFromRaw(rawConfig interface{}) bool {
 // Validate ensures your custom configuration has proper values.
 func (scc *ServiceCustomConfig) Validate() error {
 
+	if len(scc.MyserviceInfo.Host) == 0 {
+		return errors.New("host setting for service not configured")
+	}
+	if scc.MyserviceInfo.Port == 0 {
+		return errors.New("port setting for service not configured")
+	}
+
 	if len(scc.CommandClientInfo.Host) == 0 {
-		return errors.New("Host setting for Core Command client not configured")
+		return errors.New("host setting for Core Command client not configured")
 	}
 	if scc.CommandClientInfo.Port == 0 {
-		return errors.New("Port setting for Core Command client not configured")
+		return errors.New("port setting for Core Command client not configured")
 	}
+
+	if len(scc.NotificationClientInfo.Host) == 0 {
+		return errors.New("host setting for Core Command client not configured")
+	}
+	if scc.NotificationClientInfo.Port == 0 {
+		return errors.New("port setting for Core Command client not configured")
+	}
+
+	if len(scc.SchedulerClientInfo.Host) == 0 {
+		return errors.New("host setting for Scheduler client not configured")
+	}
+	if scc.SchedulerClientInfo.Port == 0 {
+		return errors.New("port setting for Scheduler client not configured")
+	}
+
+	if len(scc.RuleEngineClientInfo.Host) == 0 {
+		return errors.New("host setting for Rule Engine client not configured")
+	}
+	if scc.RuleEngineClientInfo.Port == 0 {
+		return errors.New("port setting for Rule Engine client not configured")
+	}
+
 	return nil
 }
