@@ -1,5 +1,5 @@
 [Writable]
-LogLevel = 'DEBUG'
+LogLevel = "DEBUG"
   # InsecureSecrets are required for when Redis is used for message bus
   [Writable.InsecureSecrets]
     [Writable.InsecureSecrets.DB]
@@ -9,39 +9,39 @@ LogLevel = 'DEBUG'
       password = ""
 
 [Service]
-HealthCheckInterval = '10s'
-Host = 'localhost'
+HealthCheckInterval = "10s"
+Host = "localhost"
 Port = 59990
-ServerBindAddr = ''  # blank value defaults to Service.Host value
-StartupMsg = 'device scenario started'
+ServerBindAddr = ""  # blank value defaults to Service.Host value
+StartupMsg = "device scenario started"
 # MaxRequestSize limit the request body size in byte of put command
 MaxRequestSize = 0 # value 0 unlimit the request size.
-RequestTimeout = '20s'
+RequestTimeout = "20s"
 
 [Registry]
-Host = 'localhost'
+Host = "localhost"
 Port = 8500
-Type = 'consul'
+Type = "consul"
 
 [Clients]
   [Clients.core-data]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 59880
 
   [Clients.core-metadata]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 59881
 
 [MessageQueue]
-Protocol = 'redis'
-Host = 'localhost'
+Protocol = "redis"
+Host = "localhost"
 Port = 6379
-Type = 'redis'
-AuthMode = 'usernamepassword'  # required for redis messagebus (secure or insecure).
+Type = "redis"
+AuthMode = "usernamepassword"  # required for redis messagebus (secure or insecure).
 SecretName = "redisdb"
-PublishTopicPrefix = 'edgex/events/device' # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
+PublishTopicPrefix = "edgex/events/device" # /<device-profile-name>/<device-name>/<source-name> will be added to this Publish Topic prefix
   [MessageQueue.Optional]
   # Default MQTT Specific options that need to be here to enable environment variable overrides of them
   # Client Identifiers
@@ -56,23 +56,23 @@ PublishTopicPrefix = 'edgex/events/device' # /<device-profile-name>/<device-name
 
 # Only used when EDGEX_SECURITY_SECRET_STORE=true
 [SecretStore]
-Type = 'vault'
-Host = 'localhost'
+Type = "vault"
+Host = "localhost"
 Port = 8200
-Path = 'device-scenario/'
-Protocol = 'http'
-RootCaCertPath = ''
-ServerName = ''
-TokenFile = '/tmp/edgex/secrets/device-scenario/secrets-token.json'
+Path = "device-scenario/"
+Protocol = "http"
+RootCaCertPath = ""
+ServerName = ""
+TokenFile = "/tmp/edgex/secrets/device-scenario/secrets-token.json"
   [SecretStore.Authentication]
-  AuthType = 'X-Vault-Token'
+  AuthType = "X-Vault-Token"
 
 [Device]
 DataTransform = true
 MaxCmdOps = 128
 MaxCmdValueLen = 256
-ProfilesDir = './res/profiles'
-DevicesDir = ''
+ProfilesDir = "./res/profiles"
+DevicesDir = ""
 UpdateLastConnected = false
 Labels = []
 EnableAsyncReadings = false
@@ -82,22 +82,22 @@ UseMessageBus = false
 # The structured custom configuration
 [ServiceCustomConfig]
   [ServiceCustomConfig.MyserviceInfo]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 59990
   [ServiceCustomConfig.CommandClientInfo]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 59882
   [ServiceCustomConfig.NotificationClientInfo]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 59860
   [ServiceCustomConfig.SchedulerClientInfo]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 59861
   [ServiceCustomConfig.RuleEngineClientInfo]
-  Protocol = 'http'
-  Host = 'localhost'
+  Protocol = "http"
+  Host = "localhost"
   Port = 9081
